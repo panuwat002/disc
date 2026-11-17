@@ -182,12 +182,25 @@ replaceBlock(GS, gsBody, 'apps-script/Code.gs');
 
 /* ---------- สรุป ---------- */
 
+/* รหัสย่อของเฉลยชุดนี้ — ต้องคิดแบบเดียวกับ keyFingerprint_() ใน Code.gs */
+function fingerprint(keys) {
+  var s = keys.join('');
+  var h = 2166136261;
+  for (var i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return ('0000000' + (h >>> 0).toString(16)).slice(-8);
+}
+var keyId = fingerprint(answerKey);
+
 console.log('');
 console.log('  สร้างไฟล์เรียบร้อย');
 console.log('');
 console.log('   คำถาม            ' + questions.length + ' ข้อ');
 console.log('   คู่ความสอดคล้อง   ' + pairs.length + ' คู่');
 console.log('   เวลาที่ผู้ตอบใช้   ประมาณ ' + Math.max(1, Math.round(questions.length * 11 / 60)) + ' นาที');
+console.log('   รหัสเฉลย          ' + keyId);
 console.log('');
 
 if (warnings.length) {
@@ -197,7 +210,9 @@ if (warnings.length) {
 }
 
 console.log('  ขั้นต่อไป');
-console.log('   1. git add index.html && git commit -m "ปรับคำถาม" && git push');
+console.log('   1. git add -A && git commit -m "ปรับคำถาม" && git push');
 console.log('   2. เปิด apps-script/Code.gs คัดลอกทั้งไฟล์ไปวางใน Apps Script');
 console.log('      แล้วกด ดินสอ -> เวอร์ชันใหม่ -> ทำให้ใช้งานได้');
+console.log('   3. เปิด URL ของ /exec แล้วดูว่า keyId ตรงกับ ' + keyId + ' หรือยัง');
+console.log('      ถ้าไม่ตรง = ข้อ 2 ยังไม่สำเร็จ Google ยังใช้เฉลยเก่าอยู่');
 console.log('');
