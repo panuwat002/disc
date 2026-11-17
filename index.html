@@ -136,6 +136,18 @@ h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; li
 
 /* ---------- หน้าเริ่ม ---------- */
 .intro { padding-block: 44px 0; display: flex; flex-direction: column; gap: 24px; }
+.banner {
+  margin: 0;
+  padding: 13px 15px;
+  border: 1px solid var(--warn);
+  border-left-width: 4px;
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.banner b { display: block; margin-bottom: 3px; }
+.banner a { color: var(--focus); word-break: break-all; }
 .intro h1 { font-size: clamp(30px, 7vw, 42px); }
 .intro p { margin: 0; color: var(--muted); max-width: 34rem; }
 .facts {
@@ -323,6 +335,7 @@ h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; li
 
   <!-- หน้าเริ่ม -->
   <section id="screen-intro" class="intro">
+    <p class="banner" id="demo-note" hidden></p>
     <div>
       <p class="eyebrow" id="intro-eyebrow"></p>
       <h1 id="intro-title"></h1>
@@ -350,7 +363,6 @@ h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; li
     </div>
 
     <div class="styles-peek" id="peek"></div>
-    <p class="note" id="demo-note" hidden></p>
   </section>
 
   <!-- หน้าคำถาม -->
@@ -454,6 +466,9 @@ var APPLICANT_FIELDS = [
 var CONSENT_EMPLOYEE = "ข้อมูลที่กรอกและผลการประเมินจะถูกบันทึกไว้เพื่อใช้ในการพัฒนาบุคลากรและการจัดทีมภายในองค์กรเท่านั้น ผู้ที่เข้าถึงข้อมูลได้คือฝ่ายบุคคลและผู้บังคับบัญชาที่เกี่ยวข้อง จะไม่ถูกเปิดเผยต่อบุคคลภายนอก และจะถูกลบเมื่อพ้นความจำเป็น คุณขอดู แก้ไข หรือขอให้ลบข้อมูลของตนเองได้ตลอดเวลาโดยติดต่อฝ่ายบุคคล";
 
 var CONSENT_APPLICANT = "ข้อมูลที่กรอกและผลแบบสอบถามนี้จะถูกใช้เป็นข้อมูลประกอบการสัมภาษณ์เท่านั้น ไม่ได้ใช้เป็นเกณฑ์ตัดสินรับหรือไม่รับเข้าทำงาน ผู้ที่เข้าถึงข้อมูลได้คือฝ่ายบุคคลและผู้สัมภาษณ์ในตำแหน่งที่คุณสมัคร จะไม่ถูกเปิดเผยต่อบุคคลภายนอก และจะถูกลบภายใน 6 เดือนนับจากวันที่กระบวนการสรรหาสิ้นสุด คุณขอดู แก้ไข หรือขอให้ลบข้อมูลของตนเองได้ตลอดเวลาโดยติดต่อฝ่ายบุคคล";
+
+/* 6) ลิงก์ตัวจริงที่ใช้งานอยู่ — เอาไว้โชว์ในแบนเนอร์เตือนเวลามีคนเผลอเปิดลิงก์ตัวอย่าง */
+var LIVE_URL = "https://panuwat002.github.io/disc/";
 
 /* ====================== จบส่วนตั้งค่า ====================== */
 
@@ -1158,9 +1173,15 @@ if (IS_APPLICANT) {
 
 if (!SAVE_ENABLED) {
   var note = el("demo-note");
+  var liveLink = LIVE_URL
+    ? ' ถ้าต้องการทำแบบประเมินจริง ให้ใช้ลิงก์นี้แทน<br><a href="' + LIVE_URL +
+      (IS_APPLICANT ? "?for=applicant" : "") + '">' + LIVE_URL +
+      (IS_APPLICANT ? "?for=applicant" : "") + '</a>'
+    : "";
+
   note.hidden = false;
-  note.textContent = ON_CLAUDE
-    ? "หน้านี้คือลิงก์ตัวอย่างสำหรับดูหน้าตา ยังไม่มีการบันทึกข้อมูลใด ๆ ตัวจริงที่บันทึกข้อมูลเข้า Google Sheets จะอยู่บนลิงก์ขององค์กร"
-    : "ยังไม่ได้ตั้งค่าปลายทางสำหรับบันทึกข้อมูล (ENDPOINT) หน้านี้จึงแสดงผลอย่างเดียว ยังไม่ส่งข้อมูลไปไหน";
+  note.innerHTML = ON_CLAUDE
+    ? "<b>นี่คือลิงก์ตัวอย่าง ไว้ดูหน้าตาเท่านั้น</b>ทำจนจบได้ แต่คำตอบจะไม่ถูกบันทึก และคะแนนที่เห็นเป็นตัวเลขสมมติ" + liveLink
+    : "<b>ยังไม่ได้ตั้งค่าปลายทางสำหรับบันทึกข้อมูล</b>หน้านี้จึงแสดงผลอย่างเดียว ไม่ส่งข้อมูลไปไหน และคะแนนที่เห็นเป็นตัวเลขสมมติ";
 }
 </script>
