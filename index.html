@@ -359,8 +359,8 @@ h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; li
     </div>
     <p id="intro-lead"></p>
     <div class="facts">
-      <div class="fact"><b>37</b><span>คำถาม</span></div>
-      <div class="fact"><b>7</b><span>นาทีโดยประมาณ</span></div>
+      <div class="fact"><b id="fact-total">37</b><span>คำถาม</span></div>
+      <div class="fact"><b id="fact-mins">7</b><span>นาทีโดยประมาณ</span></div>
       <div class="fact"><b>4</b><span>สไตล์พฤติกรรม</span></div>
     </div>
 
@@ -415,7 +415,7 @@ h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; li
       <div class="verdict" id="verdict"></div>
 
       <div id="bars-block">
-        <p class="eyebrow" style="margin-bottom:12px">คะแนนทั้ง 4 ด้าน จาก 37 ข้อ</p>
+        <p class="eyebrow" style="margin-bottom:12px" id="bars-title">คะแนนทั้ง 4 ด้าน</p>
         <div class="bars" id="bars"></div>
       </div>
 
@@ -507,7 +507,7 @@ var INTRO = IS_APPLICANT ? {
 } : {
   eyebrow: "แบบประเมินพฤติกรรม",
   title: "รู้จักตัวเองด้วย DISC",
-  lead: "ตอบคำถาม 37 ข้อ โดยเลือกข้อที่ใกล้เคียงกับตัวคุณที่สุด ไม่มีข้อไหนถูกหรือผิด ตอบตามที่คุณเป็นจริง ๆ ไม่ใช่ตามที่อยากเป็น แล้วจะได้รู้ว่าคุณมีสไตล์พฤติกรรมแบบไหน"
+  lead: "ตอบคำถาม {n} ข้อ โดยเลือกข้อที่ใกล้เคียงกับตัวคุณที่สุด ไม่มีข้อไหนถูกหรือผิด ตอบตามที่คุณเป็นจริง ๆ ไม่ใช่ตามที่อยากเป็น แล้วจะได้รู้ว่าคุณมีสไตล์พฤติกรรมแบบไหน"
 };
 
 /* ปิดการส่งข้อมูลอัตโนมัติเมื่อเปิดหน้านี้จากลิงก์ตัวอย่างบน claude.ai
@@ -1174,9 +1174,15 @@ function fallbackCopy(text, done) {
 }
 
 /* ===== เริ่มต้น ===== */
+/* ตัวเลขทุกตัวที่โชว์บนหน้าจอคิดจากจำนวนคำถามจริง
+   เพิ่มหรือลดคำถามแล้วหน้าเว็บปรับตามเอง ไม่ต้องไล่แก้ทีละจุด */
 el("intro-eyebrow").textContent = INTRO.eyebrow;
 el("intro-title").textContent = INTRO.title;
-el("intro-lead").textContent = INTRO.lead;
+el("intro-lead").textContent = INTRO.lead.replace("{n}", TOTAL);
+el("fact-total").textContent = String(TOTAL);
+el("fact-mins").textContent = String(Math.max(1, Math.round(TOTAL * 11 / 60)));
+el("bars-title").textContent = "คะแนนทั้ง 4 ด้าน จาก " + TOTAL + " ข้อ";
+el("counter").textContent = "ข้อ 1 จาก " + TOTAL;
 el("consent-text").textContent = CONSENT_TEXT;
 renderForm();
 buildDeck();
