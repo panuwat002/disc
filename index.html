@@ -1,10 +1,25 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>รู้จักตัวเอง DISC</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Pridi:wght@500;600&display=swap">
 
 <style>
+/* พื้นฐานที่ต้องมี — ห้ามลบ
+   [hidden] ต้องเป็น !important ไม่งั้นจะแพ้ display:flex ของ .intro
+   แล้วหน้าแรกกับหน้าคำถามจะโผล่ซ้อนกัน */
+:root {
+  color-scheme: light;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
 /* Layout: คอลัมน์เดียวกลางจอ สูงสุด 40rem — ทีละ 1 คำถามเต็มหน้าจอ แถบความคืบหน้าติดบนสุด
    สีสันทั้งหมดถูกเก็บไว้ที่หน้าผลลัพธ์ หน้าตอบคำถามใช้หมึกเรียบ ๆ ให้โฟกัสที่ข้อความ */
 :root {
@@ -330,6 +345,8 @@ h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; li
   * { transition: none !important; }
 }
 </style>
+</head>
+<body>
 
 <div class="wrap">
 
@@ -1185,3 +1202,5 @@ if (!SAVE_ENABLED) {
     : "<b>ยังไม่ได้ตั้งค่าปลายทางสำหรับบันทึกข้อมูล</b>หน้านี้จึงแสดงผลอย่างเดียว ไม่ส่งข้อมูลไปไหน และคะแนนที่เห็นเป็นตัวเลขสมมติ";
 }
 </script>
+</body>
+</html>
