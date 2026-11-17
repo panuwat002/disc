@@ -13,6 +13,10 @@ apps-script/
 # setup-google-sheets.md มีขั้นตอนภายในและ URL ปลายทาง
 docs/
 
+# source/questions.js คือคำถามพร้อมเฉลยรวมกันในไฟล์เดียว
+# เป็นต้นฉบับที่ build.js ใช้สร้าง index.html กับ Code.gs
+source/
+
 # ไฟล์ต้นฉบับจากฝ่ายบุคคล
 *.docx
 
