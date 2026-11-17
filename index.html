@@ -1,0 +1,1166 @@
+<title>รู้จักตัวเอง DISC</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600&family=Pridi:wght@500;600&display=swap">
+
+<style>
+/* Layout: คอลัมน์เดียวกลางจอ สูงสุด 40rem — ทีละ 1 คำถามเต็มหน้าจอ แถบความคืบหน้าติดบนสุด
+   สีสันทั้งหมดถูกเก็บไว้ที่หน้าผลลัพธ์ หน้าตอบคำถามใช้หมึกเรียบ ๆ ให้โฟกัสที่ข้อความ */
+:root {
+  --bg: #F5F7F5;
+  --surface: #FFFFFF;
+  --surface-2: #EDF1EE;
+  --fg: #16211F;
+  --muted: #5C6B68;
+  --line: #DCE3DF;
+  --line-strong: #C2CCC7;
+  --accent: #27463F;
+  --accent-fg: #FFFFFF;
+  --focus: #1F7A6B;
+  --warn: #9A5B00;
+
+  --d: #B8303C;
+  --i: #D9A016;
+  --s: #13885F;
+  --c: #3F6DB5;
+
+  --font-display: "Pridi", Georgia, serif;
+  --font-body: "IBM Plex Sans Thai", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111715;
+    --surface: #19211F;
+    --surface-2: #212B28;
+    --fg: #E7EDEA;
+    --muted: #9BAAA5;
+    --line: #2B3733;
+    --line-strong: #3C4A45;
+    --accent: #7FC9B8;
+    --accent-fg: #0E1715;
+    --focus: #7FC9B8;
+    --warn: #E0A95C;
+    --d: #DB5A63;
+    --i: #B28712;
+    --s: #1FA477;
+    --c: #6E93E0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111715;
+  --surface: #19211F;
+  --surface-2: #212B28;
+  --fg: #E7EDEA;
+  --muted: #9BAAA5;
+  --line: #2B3733;
+  --line-strong: #3C4A45;
+  --accent: #7FC9B8;
+  --accent-fg: #0E1715;
+  --focus: #7FC9B8;
+  --warn: #E0A95C;
+  --d: #DB5A63;
+  --i: #B28712;
+  --s: #1FA477;
+  --c: #6E93E0;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--bg);
+}
+
+.wrap {
+  max-width: 40rem;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 56px;
+}
+
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.35; }
+
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+/* ---------- ปุ่ม ---------- */
+.btn {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  padding: 13px 24px;
+  cursor: pointer;
+  background: var(--accent);
+  color: var(--accent-fg);
+  transition: opacity .15s ease;
+}
+.btn:hover { opacity: .88; }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn-quiet {
+  background: transparent;
+  color: var(--muted);
+  border-color: var(--line-strong);
+  padding: 9px 16px;
+  font-size: 14px;
+}
+.btn-quiet:hover { color: var(--fg); }
+:where(button, a, input, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- หน้าเริ่ม ---------- */
+.intro { padding-block: 44px 0; display: flex; flex-direction: column; gap: 24px; }
+.intro h1 { font-size: clamp(30px, 7vw, 42px); }
+.intro p { margin: 0; color: var(--muted); max-width: 34rem; }
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.fact { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.fact b { font-family: var(--font-display); font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.fact span { font-size: 13px; color: var(--muted); }
+
+/* ---------- ฟอร์มผู้ตอบ ---------- */
+.form { display: grid; gap: 16px; }
+.field { display: grid; gap: 6px; }
+.field label { font-size: 14px; font-weight: 500; }
+.field .req { color: var(--d); }
+.field input[type="text"], .field input[type="email"], .field select {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--fg);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  padding: 11px 13px;
+  width: 100%;
+  min-width: 0;
+}
+.field input::placeholder { color: var(--muted); opacity: .8; }
+.consent {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 12px;
+  align-items: start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+}
+.consent input { width: 18px; height: 18px; margin-top: 4px; accent-color: var(--focus); }
+.consent-text { font-size: 14px; }
+.consent-text b { display: block; margin-bottom: 4px; }
+.consent-text span { color: var(--muted); }
+.err { font-size: 14px; color: var(--d); }
+
+.styles-peek { display: grid; gap: 10px; }
+.peek {
+  display: grid;
+  grid-template-columns: 10px 1fr;
+  gap: 14px;
+  align-items: start;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.peek i { display: block; width: 10px; height: 10px; border-radius: 3px; margin-top: 8px; }
+.peek-name { font-weight: 600; }
+.peek-desc { font-size: 14px; color: var(--muted); }
+
+/* ---------- แถบความคืบหน้า ---------- */
+.topbar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 9;
+  background: var(--bg);
+  padding-block: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.topbar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.track { height: 5px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+.fill { height: 100%; width: 0; background: var(--accent); border-radius: 3px; transition: width .25s ease; }
+
+/* ---------- คำถาม ---------- */
+.q-head { padding-block: 24px 20px; }
+.q-head h2 { font-size: clamp(21px, 4.6vw, 26px); }
+.options { display: grid; gap: 10px; }
+.opt {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: left;
+  background: var(--surface);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 15px 16px;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 12px;
+  align-items: start;
+  transition: border-color .12s ease, background .12s ease;
+}
+.opt:hover { border-color: var(--line-strong); background: var(--surface-2); }
+.opt[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.opt kbd {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  margin-top: 2px;
+}
+.q-foot { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 20px; }
+.hint { font-size: 13px; color: var(--muted); }
+
+/* ---------- ผลลัพธ์ ---------- */
+.result { padding-block: 28px 0; display: flex; flex-direction: column; gap: 26px; }
+.who { font-size: 14px; color: var(--muted); }
+.who b { color: var(--fg); font-weight: 600; }
+
+.savebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  font-size: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+.savebar .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--muted); }
+.savebar.ok .dot { background: var(--s); }
+.savebar.bad .dot { background: var(--warn); }
+.savebar.ok { border-color: var(--s); }
+.savebar.bad { border-color: var(--warn); }
+
+.verdict {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 26px 22px;
+  background: var(--surface);
+  border-top: 5px solid var(--hue, var(--accent));
+}
+.verdict .eyebrow { margin-bottom: 10px; }
+.verdict h1 { font-size: clamp(27px, 6.4vw, 36px); color: var(--hue, var(--fg)); }
+.verdict .latin { font-size: 14px; color: var(--muted); margin: 4px 0 14px; letter-spacing: .02em; }
+.verdict p { margin: 0; }
+
+.bars { display: grid; gap: 14px; }
+.bar-row { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.bar-label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 14px; }
+.bar-label .nm { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.bar-label .sw { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+.bar-label .val { color: var(--muted); font-variant-numeric: tabular-nums; flex: none; }
+.bar-track { height: 12px; background: var(--surface-2); border-radius: 4px; }
+.bar-fill { height: 100%; border-radius: 4px; min-width: 4px; transition: width .5s ease; }
+
+.panel { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 20px 18px; display: grid; gap: 18px; }
+.panel h3 { font-size: 17px; }
+.panel ul { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 6px; }
+.panel li::marker { color: var(--muted); }
+.second { font-size: 15px; color: var(--muted); }
+.second b { color: var(--fg); font-weight: 600; }
+
+.note { font-size: 13px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.toast { font-size: 13px; color: var(--focus); }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+</style>
+
+<div class="wrap">
+
+  <!-- หน้าเริ่ม -->
+  <section id="screen-intro" class="intro">
+    <div>
+      <p class="eyebrow" id="intro-eyebrow"></p>
+      <h1 id="intro-title"></h1>
+    </div>
+    <p id="intro-lead"></p>
+    <div class="facts">
+      <div class="fact"><b>37</b><span>คำถาม</span></div>
+      <div class="fact"><b>7</b><span>นาทีโดยประมาณ</span></div>
+      <div class="fact"><b>4</b><span>สไตล์พฤติกรรม</span></div>
+    </div>
+
+    <div class="form" id="form"></div>
+
+    <div class="consent">
+      <input type="checkbox" id="consent">
+      <label class="consent-text" for="consent">
+        <b>ยินยอมให้เก็บข้อมูล</b>
+        <span id="consent-text"></span>
+      </label>
+    </div>
+    <p class="err" id="form-err" hidden></p>
+
+    <div>
+      <button class="btn" id="btn-start">เริ่มทำแบบประเมิน</button>
+    </div>
+
+    <div class="styles-peek" id="peek"></div>
+    <p class="note" id="demo-note" hidden></p>
+  </section>
+
+  <!-- หน้าคำถาม -->
+  <section id="screen-quiz" hidden>
+    <div class="topbar">
+      <div class="topbar-row">
+        <span id="counter">ข้อ 1 จาก 37</span>
+        <span id="pct">0%</span>
+      </div>
+      <div class="track"><div class="fill" id="fill"></div></div>
+    </div>
+    <div class="q-head">
+      <h2 id="q-text"></h2>
+    </div>
+    <div class="options" id="options"></div>
+    <div class="q-foot">
+      <button class="btn btn-quiet" id="btn-back">ย้อนกลับ</button>
+      <span class="hint">กดเลข 1–4 บนคีย์บอร์ดก็ได้</span>
+    </div>
+  </section>
+
+  <!-- หน้าผลลัพธ์ -->
+  <section id="screen-result" hidden>
+    <div class="result">
+      <p class="who" id="who"></p>
+      <div class="panel" id="thanks" hidden></div>
+      <div class="savebar" id="savebar" hidden>
+        <span class="dot"></span>
+        <span id="save-msg"></span>
+        <button class="btn btn-quiet" id="btn-retry" hidden>ส่งอีกครั้ง</button>
+      </div>
+
+      <div class="verdict" id="verdict"></div>
+
+      <div id="bars-block">
+        <p class="eyebrow" style="margin-bottom:12px">คะแนนทั้ง 4 ด้าน จาก 37 ข้อ</p>
+        <div class="bars" id="bars"></div>
+      </div>
+
+      <p class="second" id="second"></p>
+
+      <div class="panel" id="detail"></div>
+
+      <div class="actions" id="actions">
+        <button class="btn btn-quiet" id="btn-copy">คัดลอกผลลัพธ์</button>
+        <button class="btn btn-quiet" id="btn-again">ทำใหม่อีกครั้ง</button>
+        <span class="toast" id="toast" hidden>คัดลอกแล้ว</span>
+      </div>
+
+      <p class="note" id="result-note">คะแนนที่ออกมาบอกว่าคุณ “มักจะ” ทำแบบไหน ไม่ได้แปลว่าคุณทำแบบอื่นไม่ได้ คนส่วนใหญ่มีสองสไตล์ผสมกัน และพฤติกรรมเปลี่ยนได้ตามสถานการณ์และช่วงชีวิต</p>
+    </div>
+  </section>
+
+</div>
+
+<script>
+"use strict";
+
+/* =========================================================================
+   ตั้งค่า — แก้ได้แค่ในบล็อกนี้ ส่วนอื่นไม่ต้องแตะ
+   ========================================================================= */
+
+/* 1) URL ของ Google Apps Script ที่ deploy แล้ว (ดูขั้นตอนใน docs/setup-google-sheets.md)
+      ถ้าเว้นว่างไว้ เว็บจะทำงานปกติแต่ไม่ส่งข้อมูลไปไหน */
+var ENDPOINT = "https://script.google.com/macros/s/AKfycbxLHomG2plbQ_Dh3CQtLyAqf_is2vEshDBos0DUNdFIKp-2xdWpNM8a-8WjiPBEblypZQ/exec";
+
+/* 2) รายชื่อแผนก (สำหรับพนักงาน) — ใส่แล้วจะกลายเป็นเมนูให้เลือก ถ้าเว้น [] ไว้ จะเป็นช่องพิมพ์เอง
+      ตัวอย่าง: ["ฝ่ายขาย", "ฝ่ายผลิต", "ฝ่ายบัญชี", "ฝ่ายบุคคล"] */
+var DEPARTMENTS = [];
+
+/* 3) รายชื่อตำแหน่งที่เปิดรับ (สำหรับผู้สมัครงาน)
+      ต้องสะกดให้ตรงกับใน Code.gs เป๊ะ ๆ ไม่งั้นระบบจะหาโปรไฟล์ของตำแหน่งไม่เจอ */
+var JOBS = [
+  "พนักงานขาย",
+  "เจ้าหน้าที่บัญชี",
+  "เจ้าหน้าที่ธุรการ",
+  "เจ้าหน้าที่บริการลูกค้า",
+  "หัวหน้าสายการผลิต",
+  "เจ้าหน้าที่คลังสินค้า",
+  "เจ้าหน้าที่ไอที"
+];
+
+/* 4) ข้อมูลที่ขอจากผู้ตอบ — เพิ่ม/ลบบรรทัดได้ตามต้องการ
+      type: "text" | "email" | "select"  ·  required: true = ต้องกรอก */
+var EMPLOYEE_FIELDS = [
+  { key: "name",       label: "ชื่อ-สกุล", type: "text",   required: true,  placeholder: "เช่น สมชาย ใจดี" },
+  { key: "department", label: "แผนก",      type: "select", required: true,  options: DEPARTMENTS, placeholder: "เช่น ฝ่ายขาย" }
+  /* ตัวอย่างที่เพิ่มได้:
+  { key: "position",   label: "ตำแหน่ง",      type: "text",  required: false, placeholder: "เช่น หัวหน้าทีม" },
+  { key: "employeeId", label: "รหัสพนักงาน",  type: "text",  required: true,  placeholder: "เช่น EMP-0123" },
+  { key: "email",      label: "อีเมลที่ทำงาน", type: "email", required: false, placeholder: "เช่น somchai@company.co.th" }
+  */
+];
+
+var APPLICANT_FIELDS = [
+  { key: "name",     label: "ชื่อ-สกุล",        type: "text",   required: true, placeholder: "เช่น สมชาย ใจดี" },
+  { key: "position", label: "ตำแหน่งที่สมัคร",  type: "select", required: true, options: JOBS, placeholder: "เช่น พนักงานขาย" }
+];
+
+/* 5) ข้อความขอความยินยอม PDPA — ให้ HR หรือฝ่ายกฎหมายตรวจก่อนใช้งานจริง */
+var CONSENT_EMPLOYEE = "ข้อมูลที่กรอกและผลการประเมินจะถูกบันทึกไว้เพื่อใช้ในการพัฒนาบุคลากรและการจัดทีมภายในองค์กรเท่านั้น ผู้ที่เข้าถึงข้อมูลได้คือฝ่ายบุคคลและผู้บังคับบัญชาที่เกี่ยวข้อง จะไม่ถูกเปิดเผยต่อบุคคลภายนอก และจะถูกลบเมื่อพ้นความจำเป็น คุณขอดู แก้ไข หรือขอให้ลบข้อมูลของตนเองได้ตลอดเวลาโดยติดต่อฝ่ายบุคคล";
+
+var CONSENT_APPLICANT = "ข้อมูลที่กรอกและผลแบบสอบถามนี้จะถูกใช้เป็นข้อมูลประกอบการสัมภาษณ์เท่านั้น ไม่ได้ใช้เป็นเกณฑ์ตัดสินรับหรือไม่รับเข้าทำงาน ผู้ที่เข้าถึงข้อมูลได้คือฝ่ายบุคคลและผู้สัมภาษณ์ในตำแหน่งที่คุณสมัคร จะไม่ถูกเปิดเผยต่อบุคคลภายนอก และจะถูกลบภายใน 6 เดือนนับจากวันที่กระบวนการสรรหาสิ้นสุด คุณขอดู แก้ไข หรือขอให้ลบข้อมูลของตนเองได้ตลอดเวลาโดยติดต่อฝ่ายบุคคล";
+
+/* ====================== จบส่วนตั้งค่า ====================== */
+
+/* โหมดการใช้งาน — ต่อท้าย URL ด้วย ?for=applicant เพื่อใช้เป็นแบบสอบถามสำหรับผู้สมัครงาน
+   ลิงก์พนักงาน  : https://.../index.html
+   ลิงก์ผู้สมัคร : https://.../index.html?for=applicant                     */
+var MODE = (/for=applicant/i.test(location.search) || /applicant/i.test(location.hash))
+  ? "applicant" : "employee";
+
+var IS_APPLICANT = MODE === "applicant";
+var FIELDS = IS_APPLICANT ? APPLICANT_FIELDS : EMPLOYEE_FIELDS;
+var CONSENT_TEXT = IS_APPLICANT ? CONSENT_APPLICANT : CONSENT_EMPLOYEE;
+
+/* ข้อความหน้าแรกของแต่ละโหมด */
+var INTRO = IS_APPLICANT ? {
+  eyebrow: "แบบสอบถามประกอบการสมัครงาน",
+  title: "ทำความรู้จักสไตล์การทำงานของคุณ",
+  lead: "แบบสอบถามนี้ไม่ใช่ข้อสอบ ไม่มีคำตอบถูกหรือผิด และไม่ได้ใช้ตัดสินว่าจะรับหรือไม่รับเข้าทำงาน ผลที่ได้จะเป็นข้อมูลประกอบการพูดคุยในวันสัมภาษณ์เท่านั้น ขอให้ตอบตามที่คุณเป็นจริง ๆ จะเป็นประโยชน์กับตัวคุณเองที่สุด เพราะช่วยให้เราจัดคุณเข้ากับงานที่เหมาะกับคุณจริง"
+} : {
+  eyebrow: "แบบประเมินพฤติกรรม",
+  title: "รู้จักตัวเองด้วย DISC",
+  lead: "ตอบคำถาม 37 ข้อ โดยเลือกข้อที่ใกล้เคียงกับตัวคุณที่สุด ไม่มีข้อไหนถูกหรือผิด ตอบตามที่คุณเป็นจริง ๆ ไม่ใช่ตามที่อยากเป็น แล้วจะได้รู้ว่าคุณมีสไตล์พฤติกรรมแบบไหน"
+};
+
+/* ปิดการส่งข้อมูลอัตโนมัติเมื่อเปิดหน้านี้จากลิงก์ตัวอย่างบน claude.ai
+   (แพลตฟอร์มบล็อกการส่งข้อมูลออกภายนอกอยู่แล้ว หน้านี้จึงทำงานเป็นโหมดทดลอง) */
+var ON_CLAUDE = /claude/i.test(location.hostname);
+var SAVE_ENABLED = ENDPOINT !== "" && !ON_CLAUDE;
+
+/* ===== ข้อมูลสไตล์ ===== */
+var STYLES = {
+  D: { key:"D", name:"ผู้นำ", animal:"กระทิง", latin:"Dominance",
+       desc:"คุณเป็นคนมุ่งมั่น เด็ดขาด รักความท้าทาย และโฟกัสที่ผลลัพธ์เป็นหลัก",
+       strong:["ตัดสินใจได้เร็วแม้ข้อมูลยังไม่ครบ","กล้ารับงานยากและไม่กลัวการเปลี่ยนแปลง","ผลักดันงานที่ค้างให้เดินหน้าต่อได้"],
+       watch:["ใจร้อนจนข้ามความรู้สึกคนอื่น","พูดตรงเกินไปจนฟังเหมือนสั่ง","ลงรายละเอียดน้อย งานอาจหลุดจุดเล็ก ๆ"] },
+  I: { key:"I", name:"ผู้มีอิทธิพล", animal:"นกอินทรี", latin:"Influence",
+       desc:"คุณเป็นคนร่าเริง ช่างเจรจา มีความคิดสร้างสรรค์ และชอบสร้างแรงบันดาลใจให้ผู้อื่น",
+       strong:["สร้างบรรยากาศและดึงคนให้ร่วมมือได้","คิดมุมใหม่ ๆ ที่คนอื่นนึกไม่ถึง","สื่อสารและนำเสนอได้น่าติดตาม"],
+       watch:["เริ่มหลายอย่างแต่ตามเก็บไม่หมด","ให้น้ำหนักกับความรู้สึกมากกว่าข้อมูล","เบื่อง่ายกับงานซ้ำ ๆ ที่ต้องทำคนเดียว"] },
+  S: { key:"S", name:"ผู้รักความสงบ", animal:"หนู", latin:"Steadiness",
+       desc:"คุณเป็นคนอบอุ่น ใจเย็น เป็นผู้ฟังที่ดี รักความสามัคคี และมีความอดทนสูง",
+       strong:["เป็นที่พึ่งของทีม ทำงานสม่ำเสมอ","ฟังจนจบและทำให้คนรอบตัวสบายใจ","ประสานคนที่ขัดแย้งกันให้คุยกันได้"],
+       watch:["เก็บความไม่พอใจไว้คนเดียวจนอึดอัด","ปฏิเสธไม่เป็น งานเลยล้นมือ","ปรับตัวกับการเปลี่ยนแปลงกะทันหันได้ช้า"] },
+  C: { key:"C", name:"นักวิเคราะห์", animal:"หมี", latin:"Conscientiousness",
+       desc:"คุณเป็นคนมีเหตุผล ชอบความสมบูรณ์แบบ ละเอียดรอบคอบ และยึดมั่นในความถูกต้อง",
+       strong:["จับจุดผิดพลาดได้ก่อนที่มันจะบานปลาย","ทำงานตามมาตรฐานและตรวจทานเสมอ","ตัดสินด้วยข้อมูล ไม่ใช่อารมณ์"],
+       watch:["คิดนานจนตัดสินใจช้า","เรียกร้องความสมบูรณ์แบบจากคนอื่นด้วย","วิจารณ์ตรงเกินไปจนคนฟังถอดใจ"] }
+};
+var ORDER = ["D","I","S","C"];
+
+/* ===== คำถาม =====
+   เก็บเฉพาะข้อความคำถามและตัวเลือกเท่านั้น **ไม่มีเฉลย**
+   ว่าตัวเลือกไหนนับเป็น D / I / S / C อยู่ในไฟล์นี้เลย
+   เฉลยอยู่ที่ตัวแปร ANSWER_KEY ใน apps-script/Code.gs ฝั่ง Google
+   ลำดับตัวเลือกที่เขียนไว้ด้านล่างคือ "ลำดับต้นฉบับ" ที่ใช้อ้างอิงกับเฉลย
+   เวลาแสดงผลจริงจะถูกสลับใหม่ทุกครั้ง */
+var FIXED = [
+  ["เวลาอยู่ในกลุ่มเพื่อนหรือที่ทำงาน คุณมักจะเป็นคนที่...",
+   "กล้าตัดสินใจและเป็นคนนำทีม",
+   "ชวนคุย สร้างเสียงหัวเราะ และทำให้บรรยากาศคึกคัก",
+   "คอยรับฟัง สังเกต และช่วยเหลือคนรอบข้างอยู่เงียบ ๆ",
+   "ตรวจสอบความถูกต้องและคอยทักท้วงจุดที่อาจผิดพลาด"],
+  ["สิ่งที่กระตุ้นให้คุณมีไฟในการทำงานมากที่สุดคือ...",
+   "อำนาจในการตัดสินใจ การแข่งขัน และชัยชนะ",
+   "การได้รับการยอมรับ คำชมเชย และความสนุกสนาน",
+   "ความมั่นคง ความสัมพันธ์ที่ดี และบรรยากาศที่สงบสุข",
+   "มาตรฐานคุณภาพ ความแม่นยำ และระบบระเบียบที่ชัดเจน"],
+  ["เมื่อต้องเริ่มต้นทำโปรเจกต์ใหม่ คุณมักจะเริ่มจากการ...",
+   "กำหนดเป้าหมายใหญ่และสั่งการให้ทุกคนลุยทันที",
+   "ระดมสมองหาไอเดียแปลกใหม่ร่วมกับคนอื่น ๆ",
+   "วางแผนร่วมกับทีมเพื่อให้ทุกคนทำงานร่วมกันได้อย่างราบรื่น",
+   "รวบรวมข้อมูล วิเคราะห์ความเสี่ยง และเขียนขั้นตอนอย่างละเอียด"],
+  ["เวลาคุณรู้สึกเครียดหรือกดดัน คุณมักจะแสดงออกอย่างไร...",
+   "หงุดหงิด ใจร้อน สั่งการมากขึ้น และไม่ฟังใคร",
+   "พูดเยอะขึ้น บ่นระบายอารมณ์ หรือพยายามเปลี่ยนเรื่องคุย",
+   "เงียบขรึม ยอมตามน้ำไปก่อน และเก็บความรู้สึกไว้คนเดียว",
+   "ปลีกตัวอยู่คนเดียว จมอยู่กับความคิด และวิจารณ์ทุกอย่าง"],
+  ["สไตล์การพูดและการสื่อสารของคุณเป็นแบบไหน...",
+   "พูดตรงไปตรงมา กระชับ เน้นประเด็นสำคัญและผลลัพธ์",
+   "พูดเก่ง ออกท่าทางประกอบ มีเรื่องเล่าที่น่าตื่นเต้นเสมอ",
+   "พูดจานุ่มนวล สุภาพ เน้นการถามไถ่และใส่ใจความรู้สึก",
+   "พูดมีหลักการ อ้างอิงข้อเท็จจริงและตัวเลขอย่างเป็นขั้นตอน"],
+  ["สิ่งที่คุณไม่ชอบหรือรับไม่ได้ในการทำงานมากที่สุดคือ...",
+   "ความล่าช้า ความลังเล และการเสียเวลาโดยใช่เหตุ",
+   "กฎระเบียบที่เคร่งครัดเกินไป และงานที่ต้องทำซ้ำซากคนเดียว",
+   "การทะเลาะเบาะแว้ง ความรุนแรง และการเปลี่ยนแปลงกะทันหัน",
+   "ความสะเพร่า การทำงานแบบลวก ๆ และข้อมูลที่ไม่มีแหล่งอ้างอิง"],
+  ["เวลาไปเลือกซื้อของชิ้นใหญ่ คุณมักจะตัดสินใจอย่างไร...",
+   "ดูตัวเลือกที่ดีที่สุด ตัดสินใจเร็ว และซื้อทันทีไม่ลังเล",
+   "เลือกของที่ดูทันสมัย โดดเด่น หรือตามคำแนะนำของคนขายที่คุยถูกคอ",
+   "ถามความเห็นจากคนใกล้ตัว และเลือกรุ่นที่คุ้นเคยหรือน่าเชื่อถือ",
+   "เปรียบเทียบสเปก อ่านรีวิว และคำนวณความคุ้มค่าอย่างละเอียดถี่ถ้วน"],
+  ["บทบาทของคุณเวลาเกิดปัญหาเฉพาะหน้าในทีม...",
+   "เข้าไปควบคุมสถานการณ์และสั่งการแก้ปัญหาทันที",
+   "พูดให้กำลังใจทีมและหาทางออกที่สร้างสรรค์",
+   "คอยประสานงานให้ทุกคนใจเย็นลงและร่วมมือกัน",
+   "หาสาเหตุที่แท้จริงของปัญหาเพื่อป้องกันไม่ให้เกิดซ้ำ"],
+  ["คำชมแบบไหนที่ทำให้คุณรู้สึกภูมิใจในตัวเองมากที่สุด...",
+   "“คุณเป็นคนเก่ง เด็ดขาด และทำเป้าหมายสำเร็จได้รวดเร็วมาก”",
+   "“อยู่กับคุณแล้วสนุก คุณมีไอเดียเจ๋ง ๆ และเข้ากับทุกคนได้ดี”",
+   "“คุณเป็นคนใจเย็น พึ่งพาได้ และคอยซัพพอร์ตทีมได้ดีเสมอ”",
+   "“งานของคุณละเอียดรอบคอบ สมบูรณ์แบบ และไร้ที่ติจริง ๆ”"],
+  ["เวลาวางแผนไปเที่ยวพักผ่อน คุณชอบสไตล์ไหน...",
+   "ทริปผจญภัย ท้าทาย และปรับเปลี่ยนแผนได้ตามใจฉัน",
+   "ทริปที่ไปกันเยอะ ๆ เฮฮา เน้นปาร์ตี้หรือไปที่กำลังฮิต",
+   "ทริปพักผ่อนสบาย ๆ บรรยากาศคุ้นเคย ไม่ต้องรีบเร่ง",
+   "ทริปที่มีตารางเวลาชัดเจน จองทุกอย่างล่วงหน้าอย่างเป็นระบบ"],
+  ["เมื่อต้องทำงานร่วมกับคนที่มีนิสัยต่างจากคุณ คุณมักจะ...",
+   "พยายามผลักดันให้เขาทำงานตามเป้าหมายให้ทันเวลา",
+   "พยายามชวนคุยเพื่อละลายพฤติกรรมและสร้างมิตรภาพ",
+   "ปรับตัวเข้าหาเขา อดทน และหลีกเลี่ยงการปะทะ",
+   "กำหนดขอบเขตและกติกาการทำงานร่วมกันให้ชัดเจน"],
+  ["เป้าหมายระยะยาวในชีวิตที่คุณให้ความสำคัญคือ...",
+   "ความสำเร็จสูงสุด ตำแหน่งหน้าที่การงาน และความเป็นอิสระ",
+   "การมีชื่อเสียง เป็นที่รักของผู้คน และได้ใช้ชีวิตอย่างเต็มที่",
+   "ความสุขในครอบครัว ชีวิตที่ราบรื่น และความมั่นคงทางใจ",
+   "ความเชี่ยวชาญเฉพาะด้าน ความถูกต้อง และการวางแผนชีวิตที่รัดกุม"],
+
+  ["เมื่อต้องทำงานร่วมกับผู้อื่น คุณมักจะ",
+   "เป็นผู้นำและตัดสินใจอย่างรวดเร็ว",
+   "เป็นมิตรและสร้างบรรยากาศที่สนุกสนาน",
+   "ให้ความสำคัญกับความสัมพันธ์และความรู้สึกของทุกคน",
+   "ทำงานอย่างเป็นระบบและละเอียดรอบคอบ"],
+  ["เมื่อเผชิญกับความท้าทาย คุณมักจะ",
+   "มุ่งแก้ไขปัญหาโดยเร็วและตรงประเด็น",
+   "มองหาวิธีการที่สร้างสรรค์และสนุกในการแก้ปัญหา",
+   "คำนึงถึงผลกระทบต่อทุกคนที่เกี่ยวข้อง",
+   "วิเคราะห์ข้อมูลอย่างละเอียดก่อนตัดสินใจ"],
+  ["สิ่งที่ทำให้คุณหงุดหงิดที่สุดคือ",
+   "กระบวนการที่ล่าช้าและขาดประสิทธิภาพ",
+   "งานที่น่าเบื่อและเป็นกิจวัตร",
+   "ความขัดแย้งและการเผชิญหน้ารุนแรง",
+   "การทำงานที่ไร้ระเบียบและไม่มีแผน"],
+  ["เมื่อต้องพูดในที่สาธารณะ คุณมักจะ",
+   "พูดอย่างตรงไปตรงมาและมีความมั่นใจ",
+   "พูดอย่างมีชีวิตชีวาและดึงดูดความสนใจ",
+   "พูดอย่างอบอุ่นและเป็นกันเอง",
+   "พูดอย่างมีเหตุผลและมีข้อมูลสนับสนุนชัดเจน"],
+  ["สไตล์การทำงานของคุณคือ",
+   "มุ่งเน้นผลลัพธ์และทำงานอย่างรวดเร็ว",
+   "ยืดหยุ่นและปรับตัวได้ดีกับการเปลี่ยนแปลง",
+   "ทำงานเป็นทีมและช่วยเหลือผู้อื่น",
+   "ทำงานอย่างมีระบบและใส่ใจในรายละเอียด"],
+  ["เมื่อตัดสินใจ คุณมักจะ",
+   "ตัดสินใจเร็วโดยใช้ข้อมูลที่มีอยู่",
+   "ตัดสินใจตามความรู้สึกและสัญชาตญาณ",
+   "ปรึกษาผู้อื่นและพิจารณาความรู้สึกของทุกคน",
+   "รวบรวมข้อมูลให้มากที่สุดและวิเคราะห์อย่างละเอียด"],
+  ["ในการสนทนา คุณมักจะ",
+   "พูดตรงประเด็นและกระชับ",
+   "เล่าเรื่องสนุกและแสดงความกระตือรือร้น",
+   "ฟังอย่างตั้งใจและถามความรู้สึกของผู้อื่น",
+   "ถามคำถามเชิงลึกและให้ข้อมูลละเอียด"],
+  ["จุดแข็งของคุณคือ",
+   "ความกล้าตัดสินใจและความมุ่งมั่น",
+   "ความคิดสร้างสรรค์และการสร้างแรงบันดาลใจ",
+   "ความเห็นอกเห็นใจและการทำงานเป็นทีม",
+   "ความละเอียดรอบคอบและความเป็นระเบียบ"],
+  ["คุณมักถูกมองว่าเป็นคนที่",
+   "มีความมั่นใจและตรงไปตรงมา",
+   "มีเสน่ห์และกระตือรือร้น",
+   "ใจดีและเป็นผู้ฟังที่ดี",
+   "มีเหตุผลและละเอียดถี่ถ้วน"],
+  ["เมื่อมีความขัดแย้ง คุณมักจะ",
+   "เผชิญหน้ากับปัญหาโดยตรง",
+   "ใช้อารมณ์ขันเพื่อลดความตึงเครียด",
+   "หาทางประนีประนอมเพื่อรักษาความสัมพันธ์",
+   "วิเคราะห์ข้อเท็จจริงและหาทางออกที่เป็นธรรม"],
+  ["สภาพแวดล้อมที่คุณทำงานได้ดีที่สุดคือ",
+   "สภาพแวดล้อมที่ท้าทายและมีอิสระ",
+   "สภาพแวดล้อมที่สร้างสรรค์และสนุกสนาน",
+   "สภาพแวดล้อมที่เป็นมิตรและสนับสนุนซึ่งกันและกัน",
+   "สภาพแวดล้อมที่เป็นระเบียบและคาดการณ์ได้"],
+  ["เป้าหมายของคุณมักเป็น",
+   "ความสำเร็จและผลลัพธ์ที่เป็นรูปธรรม",
+   "การได้รับการยอมรับและมีอิทธิพลต่อผู้อื่น",
+   "การช่วยเหลือผู้อื่นและสร้างความสัมพันธ์ที่ดี",
+   "คุณภาพของงานและความถูกต้องแม่นยำ"],
+  ["ภายใต้ความกดดัน คุณมักจะ",
+   "มุ่งมั่นจัดการกับปัญหาอย่างเด็ดขาด",
+   "มองหาวิธีการใหม่ ๆ หรือหลีกเลี่ยงความกดดัน",
+   "แสวงหาการสนับสนุนจากผู้อื่น",
+   "ถอยกลับมาวิเคราะห์และวางแผนอย่างรอบคอบ"],
+  ["คุณชอบรับข้อมูลในรูปแบบ",
+   "สรุปประเด็นสำคัญและกระชับ",
+   "นำเสนออย่างน่าสนใจด้วยภาพหรือเรื่องราว",
+   "การพูดคุยแบบเป็นกันเองและแลกเปลี่ยนความคิดเห็น",
+   "ข้อมูลละเอียดครบถ้วนพร้อมหลักฐานสนับสนุน"],
+  ["สิ่งที่จูงใจคุณมากที่สุดคือ",
+   "ความสำเร็จและการได้รับอำนาจ",
+   "การได้รับการยอมรับและความตื่นเต้น",
+   "การมีความมั่นคงและความสัมพันธ์ที่ดี",
+   "คุณภาพและความถูกต้อง"]
+];
+
+var SCRAMBLED = [
+  { t:"ในการทำงาน สิ่งที่สำคัญที่สุดสำหรับฉันคือ...",
+    a:["ทำทุกอย่างให้เสร็จแล้วรอดูผลลัพธ์ว่าเป็นอย่างไร",
+       "การได้รับคำชมจากเพื่อนร่วมงานและมีอิสระในการทำงาน",
+       "การช่วยเหลือเพื่อนร่วมงานและอยู่ในสภาพแวดล้อมที่สงบ",
+       "การได้รู้อย่างแน่ชัดว่าตนเองต้องการอะไรและต้องทำงานหนึ่งให้เสร็จก่อนจะไปทำอีกงาน"] },
+  { t:"เวลาที่ใครสักคนเสนอความคิดเห็นหรือข้อสรุป แล้วฉันไม่เห็นด้วย ฉันมักจะ...",
+    a:["บอกเขาว่าฉันไม่เห็นด้วย",
+       "ถามข้อมูลเพิ่มเติม",
+       "พูดอะไรตลก ๆ กลบเกลื่อน",
+       "พยักหน้าและไม่พูดอะไร"] },
+  { t:"เวลาที่ทำงานกันเป็นทีม แล้วเจอปัญหาที่ยาก ๆ ฉันมักจะพูดว่า...",
+    a:["มาหาข้อสรุปกันเถอะ!",
+       "อย่าคิดมาก ตามน้ำไปนั่นแหละ!",
+       "ทุกคนรู้สึกยังไงกันบ้าง? ฉันอยากแน่ใจว่าทุกคนสบายใจดี",
+       "มาคิดให้รอบคอบกว่านี้ดีไหม? พวกเรามีข้อมูลทั้งที่พวกเราต้องการแล้วหรือ?"] },
+  { t:"ทัศนคติของฉันต่องานที่ละเอียด ๆ เช่น งานสำรวจและวิเคราะห์ข้อมูล คือ...",
+    a:["ถ้ามันช่วยให้ได้ผลลัพธ์ที่ดีและเร็วขึ้น ฉันจะทำ",
+       "เยี่ยม ฉันสนุกกับการค้นหาและวิเคราะห์ข้อมูลมาก",
+       "ถ้ามันทำให้ผู้อื่นคิดเกี่ยวกับฉันดีขึ้น ฉันจะทำ",
+       "ถ้ามันช่วยผู้อื่นหรือทำให้งานมันง่ายขึ้น ฉันจะทำ"] },
+  { t:"เมื่อฉันอยู่ในงานงานหนึ่งกับผู้คนมากมายที่ฉันไม่เคยเจอมาก่อน ฉันมักจะ...",
+    a:["ไปคุยกับคนที่ฉันจำเป็นต้องคุยด้วยเพื่อทำตามวัตถุประสงค์สำหรับการเข้าร่วมงานครั้งนี้ให้บรรลุสำเร็จ",
+       "พบปะและพูดคุยกับผู้คนให้ได้มากที่สุดเท่าที่จะมากได้ ก่อนที่งานจะจบ",
+       "หากลุ่มเล็ก ๆ กับคนที่ฉันรู้สึกสบายจะคุยด้วย",
+       "หาที่นั่งดี ๆ ในการสังเกตการณ์ภายในงาน นั่งเงียบ ๆ จนกว่าจะมีคนเข้ามาทัก"] },
+  { t:"ฉันมองว่าตัวเองเป็นคน...",
+    a:["ชอบงานปฏิบัติ มุ่งมั่น แข่งขัน",
+       "อัธยาศัยดี สนุกสนาน ชอบโน้มน้าวใจผู้อื่น",
+       "อดทน ใจดี ชอบช่วยเหลือ",
+       "มีหลักการ ยึดข้อเท็จจริง ยึดความถูกต้อง"] },
+  { t:"เมื่อฉันได้ยินว่าจะมีการเปลี่ยนแปลงเกิดขึ้น ฉันมักจะคิดว่า...",
+    a:["มันส่งผลกระทบต่อตัวฉันอย่างไร",
+       "มันมีข้อดีอะไรซ่อนอยู่รึเปล่า",
+       "มันส่งผลต่อคนที่มีส่วนเกี่ยวข้องอย่างไร",
+       "มีผลกระทบอะไรต่องานและประสิทธิภาพในการทำงานไหม"] },
+  { t:"ประโยคที่อธิบายวิธีการทำงานของฉันได้ดีที่สุดคือ...",
+    a:["คุณต้องการให้ฉันทำงานนี้อย่างไร",
+       "ใครจะทำงานนี้กับฉัน? มีใครที่ฉันปรึกษาด้วยได้ตอนทำงานบ้าง?",
+       "ทำเสร็จแล้ว มีอะไรให้ทำอีกไหม?",
+       "วางแผนการทำงานและทำงานตามแผนที่วาง"] },
+  { t:"งานแบบที่ฉันรู้สึกอยากทำมากที่สุดคือ...",
+    a:["งานเร่งด่วน เพราะการเปลี่ยนงานอย่างรวดเร็วทำให้เกิดการพัฒนา",
+       "งานที่ได้ติดต่อสื่อสารกับคนอื่นเยอะ ๆ เพื่อสร้างไอเดียและพลังงานใหม่ ๆ",
+       "งานที่ทำแล้วสบายใจ ช่วยเหลือคนในกลุ่มได้",
+       "ทำงานคนเดียว และให้ความสนใจกับงานที่กำลังทำอยู่ เพื่อให้งานออกมาดีที่สุด"] },
+  { t:"เมื่อฉันได้รับสายโทรศัพท์ ฉันมักจะ...",
+    a:["อยากรู้ว่าเขาอยากให้ฉันทำอะไร",
+       "คุยกับคนที่โทรมา",
+       "อยากรู้ว่าฉันจะช่วยเขาได้อย่างไร",
+       "อยากรู้ว่าเขาโทรหาฉันทำไม"] }
+];
+
+var QUESTIONS = [];
+FIXED.forEach(function (row) {
+  QUESTIONS.push({ t: row[0], o: row.slice(1) });
+});
+SCRAMBLED.forEach(function (q) {
+  QUESTIONS.push({ t: q.t, o: q.a });
+});
+
+/* ===== สถานะ ===== */
+var TOTAL = QUESTIONS.length;
+var deck = [];      // ลำดับการแสดงตัวเลือกของแต่ละข้อ (สลับใหม่ทุกครั้ง)
+var answers = [];   // ลำดับต้นฉบับของตัวเลือกที่เลือกไว้ (0–3) ยังไม่ใช่ D/I/S/C
+var idx = 0;
+var person = {};    // ข้อมูลผู้ตอบ
+var startedAt = null;
+var lastPayload = null;
+var sending = false;
+
+var el = function (id) { return document.getElementById(id); };
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function buildDeck() {
+  deck = QUESTIONS.map(function () { return { order: shuffle([0, 1, 2, 3]) }; });
+  answers = new Array(TOTAL).fill(null);
+  idx = 0;
+}
+
+function show(name) {
+  el("screen-intro").hidden = name !== "intro";
+  el("screen-quiz").hidden = name !== "quiz";
+  el("screen-result").hidden = name !== "result";
+  window.scrollTo(0, 0);
+}
+
+/* ===== หน้าเริ่ม ===== */
+function renderForm() {
+  var box = el("form");
+  box.innerHTML = "";
+  FIELDS.forEach(function (f) {
+    var wrap = document.createElement("div");
+    wrap.className = "field";
+
+    var lab = document.createElement("label");
+    lab.setAttribute("for", "f-" + f.key);
+    lab.textContent = f.label;
+    if (f.required) {
+      var star = document.createElement("span");
+      star.className = "req";
+      star.textContent = " *";
+      lab.appendChild(star);
+    }
+    wrap.appendChild(lab);
+
+    var input;
+    if (f.type === "select" && f.options && f.options.length) {
+      input = document.createElement("select");
+      var blank = document.createElement("option");
+      blank.value = "";
+      blank.textContent = "— เลือก" + f.label + " —";
+      input.appendChild(blank);
+      f.options.forEach(function (o) {
+        var op = document.createElement("option");
+        op.value = o;
+        op.textContent = o;
+        input.appendChild(op);
+      });
+      var other = document.createElement("option");
+      other.value = "อื่น ๆ";
+      other.textContent = "อื่น ๆ";
+      input.appendChild(other);
+    } else {
+      input = document.createElement("input");
+      input.type = f.type === "email" ? "email" : "text";
+      if (f.placeholder) input.placeholder = f.placeholder;
+      input.autocomplete = f.key === "name" ? "name" : "off";
+    }
+    input.id = "f-" + f.key;
+    input.dataset.key = f.key;
+    wrap.appendChild(input);
+    box.appendChild(wrap);
+  });
+}
+
+function readForm() {
+  var out = {};
+  var missing = [];
+  FIELDS.forEach(function (f) {
+    var node = el("f-" + f.key);
+    var v = node ? String(node.value || "").trim() : "";
+    out[f.key] = v;
+    if (f.required && !v) missing.push(f.label);
+  });
+  return { values: out, missing: missing };
+}
+
+function renderPeek() {
+  el("peek").innerHTML = ORDER.map(function (k) {
+    var s = STYLES[k];
+    return '<div class="peek"><i style="background:var(--' + k.toLowerCase() + ')"></i>' +
+           '<div><div class="peek-name">' + s.name + ' · ' + s.animal + '</div>' +
+           '<div class="peek-desc">' + s.latin + ' — ' + s.desc + '</div></div></div>';
+  }).join("");
+}
+
+/* ===== หน้าคำถาม ===== */
+function renderQuestion() {
+  var q = QUESTIONS[idx];
+  el("counter").textContent = "ข้อ " + (idx + 1) + " จาก " + TOTAL;
+  var pct = Math.round((idx / TOTAL) * 100);
+  el("pct").textContent = pct + "%";
+  el("fill").style.width = pct + "%";
+  el("q-text").textContent = q.t;
+  el("btn-back").style.visibility = idx === 0 ? "hidden" : "visible";
+
+  var box = el("options");
+  box.innerHTML = "";
+  deck[idx].order.forEach(function (original, i) {
+    var b = document.createElement("button");
+    b.className = "opt";
+    b.type = "button";
+    b.setAttribute("aria-pressed", answers[idx] === original ? "true" : "false");
+    var k = document.createElement("kbd");
+    k.textContent = String(i + 1);
+    var sp = document.createElement("span");
+    sp.textContent = q.o[original];
+    b.appendChild(k);
+    b.appendChild(sp);
+    b.addEventListener("click", function () { pick(original); });
+    box.appendChild(b);
+  });
+}
+
+function pick(original) {
+  answers[idx] = original;
+  if (idx < TOTAL - 1) { idx++; renderQuestion(); }
+  else { finish(); }
+}
+
+function back() {
+  if (idx > 0) { idx--; renderQuestion(); }
+}
+
+document.addEventListener("keydown", function (e) {
+  if (el("screen-quiz").hidden) return;
+  var n = parseInt(e.key, 10);
+  if (n >= 1 && n <= 4) {
+    e.preventDefault();
+    pick(deck[idx].order[n - 1]);
+  }
+});
+
+/* ===== ผลลัพธ์ =====
+   หน้าเว็บไม่ได้คิดคะแนนเอง ส่งแค่ว่าแต่ละข้อเลือกตัวเลือกลำดับที่เท่าไหร่
+   แล้ว Apps Script ฝั่ง Google เป็นคนแปลงเป็น D/I/S/C และส่งผลกลับมา  */
+
+var result = null;   // ผลที่ Apps Script คำนวณกลับมา
+
+/* ผลตัวอย่างสำหรับโหมดดูหน้าตา (ลิงก์ claude.ai หรือยังไม่ได้ตั้ง ENDPOINT)
+   เป็นตัวเลขสมมติ ไม่เกี่ยวกับคำตอบที่กดไป */
+var SAMPLE_RESULT = {
+  counts: { D: 13, I: 9, S: 8, C: 7 },
+  ranked: ["D", "I", "S", "C"],
+  winners: ["D"],
+  seconds: ["I"]
+};
+
+var RESULT_PARTS = ["verdict", "bars-block", "second", "detail", "actions", "result-note"];
+
+function setResultBody(visible) {
+  RESULT_PARTS.forEach(function (id) {
+    var node = el(id);
+    if (node) node.hidden = !visible;
+  });
+}
+
+function label(k) { return STYLES[k].name + " · " + STYLES[k].animal; }
+
+/* ===== หน้าผลลัพธ์ ===== */
+function renderResult() {
+  if (!result) return;
+
+  el("thanks").hidden = true;
+  setResultBody(true);
+
+  var counts = result.counts;
+  var seconds = result.seconds || [];
+  var r = {
+    counts: counts,
+    ranked: result.ranked,
+    winners: result.winners,
+    seconds: seconds,
+    top: counts[result.ranked[0]]
+  };
+
+  var whoBits = FIELDS.map(function (f) { return person[f.key]; }).filter(Boolean);
+  el("who").innerHTML = whoBits.length ? "ผลของ <b>" + escapeHtml(whoBits.join(" · ")) + "</b>" : "";
+
+  var v = el("verdict");
+  if (r.winners.length === 1) {
+    var s = STYLES[r.winners[0]];
+    v.style.setProperty("--hue", "var(--" + s.key.toLowerCase() + ")");
+    v.innerHTML = '<p class="eyebrow">สไตล์หลักของคุณ</p>' +
+      '<h1>' + label(s.key) + '</h1>' +
+      '<p class="latin">' + s.key + ' — ' + s.latin + ' · ' + r.top + ' จาก ' + TOTAL + ' ข้อ</p>' +
+      '<p>' + s.desc + '</p>';
+  } else {
+    v.style.setProperty("--hue", "var(--" + r.winners[0].toLowerCase() + ")");
+    v.innerHTML = '<p class="eyebrow">สไตล์หลักของคุณเสมอกัน ' + r.winners.length + ' แบบ</p>' +
+      '<h1>' + r.winners.map(label).join(" + ") + '</h1>' +
+      '<p class="latin">แต่ละแบบได้ ' + r.top + ' จาก ' + TOTAL + ' ข้อเท่ากัน</p>' +
+      '<p>' + r.winners.map(function (k) { return STYLES[k].desc; }).join(" และ ") + '</p>';
+  }
+
+  var max = Math.max(1, r.top);
+  el("bars").innerHTML = r.ranked.map(function (k) {
+    var w = Math.round((counts[k] / max) * 100);
+    return '<div class="bar-row">' +
+      '<div class="bar-label"><span class="nm"><span class="sw" style="background:var(--' + k.toLowerCase() + ')"></span>' +
+      label(k) + '</span><span class="val">' + counts[k] + ' ข้อ</span></div>' +
+      '<div class="bar-track"><div class="bar-fill" style="width:' + w + '%;background:var(--' + k.toLowerCase() + ')"></div></div>' +
+      '</div>';
+  }).join("");
+
+  var secondEl = el("second");
+  if (r.winners.length > 1) {
+    secondEl.textContent = "เมื่อสไตล์หลักเสมอกัน แปลว่าคุณยืดหยุ่นและปรับตัวตามสถานการณ์ได้ดี ลองอ่านคำอธิบายของทุกแบบที่เสมอกัน";
+  } else if (!r.seconds.length) {
+    secondEl.textContent = "คุณตอบไปทางสไตล์เดียวแทบทั้งหมด ไม่มีสไตล์รองที่ชัดเจน";
+  } else {
+    secondEl.innerHTML = "สไตล์รองของคุณคือ <b>" + r.seconds.map(label).join(" และ ") +
+      "</b> (" + counts[r.seconds[0]] + " ข้อ) — คนส่วนใหญ่ใช้สองสไตล์นี้สลับกันตามสถานการณ์";
+  }
+
+  el("detail").innerHTML = r.winners.map(function (k) {
+    var s = STYLES[k];
+    return '<div><h3>' + label(k) + '</h3>' +
+      '<div style="margin-top:10px"><strong>จุดแข็ง</strong><ul>' +
+        s.strong.map(function (x) { return '<li>' + x + '</li>'; }).join("") + '</ul></div>' +
+      '<div style="margin-top:14px"><strong>จุดที่ควรระวัง</strong><ul>' +
+        s.watch.map(function (x) { return '<li>' + x + '</li>'; }).join("") + '</ul></div>' +
+      '</div>';
+  }).join("");
+
+  el("fill").style.width = "100%";
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function (m) {
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[m];
+  });
+}
+
+/* ===== ส่งข้อมูลเข้า Google Sheets ===== */
+function buildPayload() {
+  var p = {
+    mode: MODE,
+    submittedAt: new Date().toISOString(),
+    durationSec: startedAt ? Math.round((Date.now() - startedAt) / 1000) : null,
+    totalQuestions: TOTAL,
+    /* ลำดับตัวเลือกต้นฉบับที่เลือกในแต่ละข้อ เช่น "0231..." (x = ยังไม่ได้ตอบ)
+       ตัวเลขพวกนี้ไม่มีความหมายถ้าไม่มีเฉลยซึ่งอยู่ฝั่ง Google */
+    picks: answers.map(function (a) { return a === null ? "x" : String(a); }).join("")
+  };
+  FIELDS.forEach(function (f) { p[f.key] = person[f.key] || ""; });
+  return p;
+}
+
+function setSaveState(state, msg) {
+  var bar = el("savebar");
+  bar.hidden = false;
+  bar.className = "savebar" + (state ? " " + state : "");
+  el("save-msg").textContent = msg;
+  el("btn-retry").hidden = state !== "bad";
+}
+
+function send() {
+  if (sending) return;
+  sending = true;
+  setSaveState("", IS_APPLICANT ? "กำลังบันทึกคำตอบ…" : "กำลังบันทึกและคำนวณผล…");
+
+  fetch(ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(lastPayload)
+  }).then(function (res) {
+    return res.json().catch(function () { return { ok: res.ok }; });
+  }).then(function (data) {
+    sending = false;
+    if (!data || !data.ok) {
+      setSaveState("bad", "ระบบตอบกลับว่าบันทึกไม่สำเร็จ กดส่งอีกครั้งได้");
+      return;
+    }
+    setSaveState("ok", IS_APPLICANT ? "บันทึกคำตอบเรียบร้อยแล้ว" : "บันทึกผลเรียบร้อยแล้ว");
+    if (!IS_APPLICANT && data.result) {
+      result = data.result;
+      renderResult();
+    }
+  }).catch(function () {
+    sending = false;
+    setSaveState("bad", IS_APPLICANT
+      ? "ส่งข้อมูลไม่สำเร็จ ตรวจสอบอินเทอร์เน็ตแล้วกดส่งอีกครั้ง"
+      : "ส่งข้อมูลไม่สำเร็จ จึงยังคำนวณผลให้ไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วกดส่งอีกครั้ง");
+  });
+}
+
+/* โหมดผู้สมัครงาน: ไม่แสดงผล DISC ให้ผู้ตอบเห็น
+   เพราะถ้าเห็นว่าตัวเองออกมาเป็นสไตล์ไหน จะเดาได้ทันทีว่าควรตอบใหม่อย่างไร
+   ผลเต็มไปโผล่ที่ฝ่ายบุคคลใน Google Sheets แทน */
+function renderThanks() {
+  setResultBody(false);
+
+  var name = person.name ? escapeHtml(person.name) : "";
+  var job = person.position ? escapeHtml(person.position) : "";
+  el("who").innerHTML = "";
+
+  el("thanks").hidden = false;
+  el("thanks").innerHTML =
+    '<div>' +
+      '<h3>ขอบคุณที่สละเวลาทำแบบสอบถาม' + (name ? " คุณ" + name : "") + '</h3>' +
+      '<p style="margin:10px 0 0">บันทึกคำตอบของคุณเรียบร้อยแล้ว' +
+        (job ? ' สำหรับตำแหน่ง <strong>' + job + '</strong>' : '') +
+      '</p>' +
+      '<p style="margin:10px 0 0;color:var(--muted)">คำตอบชุดนี้จะถูกใช้เป็นหัวข้อพูดคุยในวันสัมภาษณ์ ' +
+      'ไม่มีคะแนนผ่านหรือไม่ผ่าน และไม่ได้ใช้ตัดสินผลการรับเข้าทำงาน ' +
+      'ทีมงานจะติดต่อกลับตามขั้นตอนการสรรหาต่อไป</p>' +
+      '<p style="margin:14px 0 0;color:var(--muted);font-size:14px">ปิดหน้านี้ได้เลยครับ</p>' +
+    '</div>';
+}
+
+function finish() {
+  lastPayload = buildPayload();
+  el("fill").style.width = "100%";
+  show("result");
+
+  if (IS_APPLICANT) {
+    renderThanks();
+    if (SAVE_ENABLED) send();
+    else if (ON_CLAUDE) setSaveState("", "ลิงก์ตัวอย่าง — ไม่มีการบันทึกข้อมูลใด ๆ");
+    else el("savebar").hidden = true;
+    return;
+  }
+
+  /* โหมดพนักงาน — ซ่อนผลไว้ก่อนจนกว่า Google จะคำนวณกลับมา */
+  el("thanks").hidden = true;
+  setResultBody(false);
+
+  if (SAVE_ENABLED) {
+    send();
+  } else {
+    result = SAMPLE_RESULT;
+    renderResult();
+    setSaveState("", ON_CLAUDE
+      ? "ลิงก์ตัวอย่าง — ตัวเลขด้านล่างเป็นค่าสมมติ ไม่ได้คำนวณจากคำตอบที่เพิ่งกด"
+      : "ยังไม่ได้ตั้งค่าปลายทาง จึงแสดงเป็นผลตัวอย่างด้วยตัวเลขสมมติ");
+  }
+}
+
+function resultText() {
+  if (!result) return "";
+  var lines = ["ผลแบบประเมินพฤติกรรม DISC (" + TOTAL + " ข้อ)"];
+  FIELDS.forEach(function (f) {
+    if (person[f.key]) lines.push(f.label + ": " + person[f.key]);
+  });
+  lines.push("");
+  result.ranked.forEach(function (k) {
+    lines.push(label(k) + " (" + k + ") — " + result.counts[k] + " ข้อ");
+  });
+  lines.push("");
+  lines.push("สไตล์หลัก: " + result.winners.map(label).join(" + "));
+  if (result.seconds && result.seconds.length) {
+    lines.push("สไตล์รอง: " + result.seconds.map(label).join(" + "));
+  }
+  return lines.join("\n");
+}
+
+/* ===== ปุ่ม ===== */
+el("btn-start").addEventListener("click", function () {
+  var form = readForm();
+  var errs = [];
+  if (form.missing.length) errs.push("กรุณากรอก " + form.missing.join(" และ "));
+  if (!el("consent").checked) errs.push("กรุณาติ๊กยินยอมให้เก็บข้อมูลก่อนเริ่มทำ");
+  var errBox = el("form-err");
+  if (errs.length) {
+    errBox.hidden = false;
+    errBox.textContent = errs.join(" · ");
+    return;
+  }
+  errBox.hidden = true;
+  person = form.values;
+  startedAt = Date.now();
+  buildDeck();
+  renderQuestion();
+  show("quiz");
+});
+
+el("btn-back").addEventListener("click", back);
+el("btn-retry").addEventListener("click", send);
+
+el("btn-again").addEventListener("click", function () {
+  buildDeck();
+  lastPayload = null;
+  result = null;
+  el("savebar").hidden = true;
+  show("intro");
+});
+
+el("btn-copy").addEventListener("click", function () {
+  var text = resultText();
+  var done = function () {
+    var t = el("toast");
+    t.hidden = false;
+    setTimeout(function () { t.hidden = true; }, 2000);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(done, function () { fallbackCopy(text, done); });
+  } else {
+    fallbackCopy(text, done);
+  }
+});
+
+function fallbackCopy(text, done) {
+  var ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); done(); } catch (err) { /* เงียบไว้ */ }
+  document.body.removeChild(ta);
+}
+
+/* ===== เริ่มต้น ===== */
+el("intro-eyebrow").textContent = INTRO.eyebrow;
+el("intro-title").textContent = INTRO.title;
+el("intro-lead").textContent = INTRO.lead;
+el("consent-text").textContent = CONSENT_TEXT;
+renderForm();
+buildDeck();
+
+if (IS_APPLICANT) {
+  /* ไม่โชว์คำอธิบาย 4 สไตล์ให้ผู้สมัครเห็นก่อนทำ ไม่งั้นจะรู้ว่าต้องตอบทางไหน */
+  el("peek").hidden = true;
+} else {
+  renderPeek();
+}
+
+if (!SAVE_ENABLED) {
+  var note = el("demo-note");
+  note.hidden = false;
+  note.textContent = ON_CLAUDE
+    ? "หน้านี้คือลิงก์ตัวอย่างสำหรับดูหน้าตา ยังไม่มีการบันทึกข้อมูลใด ๆ ตัวจริงที่บันทึกข้อมูลเข้า Google Sheets จะอยู่บนลิงก์ขององค์กร"
+    : "ยังไม่ได้ตั้งค่าปลายทางสำหรับบันทึกข้อมูล (ENDPOINT) หน้านี้จึงแสดงผลอย่างเดียว ยังไม่ส่งข้อมูลไปไหน";
+}
+</script>
