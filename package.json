@@ -1,0 +1,18 @@
+{
+  "name": "disc-behavior-assessment",
+  "version": "1.0.0",
+  "private": true,
+  "description": "แบบประเมินพฤติกรรม DISC พร้อมเครื่องมือนำเข้า-ส่งออกไฟล์ Excel (.xls / .xlsx)",
+  "scripts": {
+    "build": "node build.js",
+    "export:questions": "node excel.js export-questions",
+    "export:questions:xls": "node excel.js export-questions --format xls",
+    "import:questions": "node excel.js import-questions",
+    "template:questions": "node excel.js template-questions",
+    "template:results": "node excel.js template-results",
+    "test": "node test/excel.test.js"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+}
