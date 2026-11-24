@@ -333,13 +333,14 @@ function createAppsScriptSandbox() {
 
 var gs = createAppsScriptSandbox();
 
-test('9. Code.gs โหลดได้ไม่มี syntax error และ onOpen() สร้างเมนูครบทั้ง 2 หมวด', function () {
+test('9. Code.gs โหลดได้ไม่มี syntax error และ onOpen() สร้างเมนูครบทั้ง Dashboard และ Excel', function () {
   gs.onOpen();
   var items = gs._menuCalls.filter(function (x) { return !x.sep && !x.sub; });
-  assert.strictEqual(items.length, 8);
-  assert.strictEqual(items[0].fn, 'openQuestionImportDialog');
-  assert.strictEqual(items[4].fn, 'openExcelImportDialog');
-  assert.strictEqual(items[7].fn, 'createSummarySheet');
+  assert.strictEqual(items.length, 9);
+  assert.strictEqual(items[0].fn, 'openDashboardDialog');
+  assert.strictEqual(items[1].fn, 'openQuestionImportDialog');
+  assert.strictEqual(items[5].fn, 'openExcelImportDialog');
+  assert.strictEqual(items[8].fn, 'createSummarySheet');
 });
 
 test('10. HTML Dialog ของทั้ง 4 แท็บ และสคริปต์ใน index.html มี JavaScript ที่ syntax ถูกต้องสมบูรณ์', function () {
@@ -556,6 +557,24 @@ test('18. นำเข้าชุดคำถามโหมดเพิ่ม�
   var expQ = gs.getQuestionsExportData();
   assert.strictEqual(expQ.ok, true);
   assert.strictEqual(expQ.count, 7);
+});
+
+test('19. Dashboard ดึงข้อมูลรวมพนักงาน/ผู้สมัคร และสร้าง HTML/JS ถูกต้องไม่มี syntax error', function () {
+  var dash = gs.getDashboardData();
+  assert.strictEqual(dash.ok, true);
+  assert.ok(dash.records.length >= 3);
+  assert.strictEqual(dash.questionBank.count, 7);
+
+  var html = gs.buildDashboardHtml_();
+  assert.ok(html.indexOf('DISC Analytics Dashboard') !== -1);
+  assert.ok(html.indexOf('renderDonut') !== -1);
+  assert.ok(html.indexOf('makeRadarSvg') !== -1);
+  var scripts = html.match(/<script>([\s\S]*?)<\/script>/g);
+  assert.ok(scripts && scripts.length >= 2);
+  scripts.forEach(function (block) {
+    var body = block.replace(/^<script>/, '').replace(/<\/script>$/, '');
+    new Function(body);
+  });
 });
 
 cleanup();
