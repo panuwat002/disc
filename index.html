@@ -966,9 +966,11 @@ h1, h2, h3 {
   .brand-sub { display: none; }
 }
 
+@page { margin: 12mm; }
 @media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   .site-nav, .actions, .savebar { display: none !important; }
-  body { background: #fff !important; color: #111 !important; }
+  body { background: #fff !important; color: #0F172A !important; --fg: #0F172A; --muted: #475569; --surface: #FFFFFF; --surface-solid: #FFFFFF; --surface-2: #F1F5F9; --line: #D8DEE6; }
   .verdict, .bento-card, .style-deep, .second { box-shadow: none !important; break-inside: avoid; background: #fff !important; border-color: #d8dee6 !important; }
 }
 
