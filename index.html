@@ -738,6 +738,7 @@ var QUESTIONS = [
 
 /* ===== สถานะ ===== */
 var TOTAL = QUESTIONS.length;
+var QUESTION_KEY_ID = "";
 var deck = [];      // ลำดับการแสดงตัวเลือกของแต่ละข้อ (สลับใหม่ทุกครั้ง)
 var answers = [];   // ลำดับต้นฉบับของตัวเลือกที่เลือกไว้ (0–3) ยังไม่ใช่ D/I/S/C
 var idx = 0;
@@ -995,6 +996,7 @@ function buildPayload() {
     submittedAt: new Date().toISOString(),
     durationSec: startedAt ? Math.round((Date.now() - startedAt) / 1000) : null,
     totalQuestions: TOTAL,
+    keyId: QUESTION_KEY_ID,
     /* ลำดับตัวเลือกต้นฉบับที่เลือกในแต่ละข้อ เช่น "0231..." (x = ยังไม่ได้ตอบ)
        ตัวเลขพวกนี้ไม่มีความหมายถ้าไม่มีเฉลยซึ่งอยู่ฝั่ง Google */
     picks: answers.map(function (a) { return a === null ? "x" : String(a); }).join("")
@@ -1025,7 +1027,7 @@ function send() {
   }).then(function (data) {
     sending = false;
     if (!data || !data.ok) {
-      setSaveState("bad", "ระบบตอบกลับว่าบันทึกไม่สำเร็จ กดส่งอีกครั้งได้");
+      setSaveState("bad", (data && data.error) ? data.error : "ระบบตอบกลับว่าบันทึกไม่สำเร็จ กดส่งอีกครั้งได้");
       return;
     }
     setSaveState("ok", IS_APPLICANT ? "บันทึกคำตอบเรียบร้อยแล้ว" : "บันทึกผลเรียบร้อยแล้ว");
@@ -1169,17 +1171,47 @@ function fallbackCopy(text, done) {
 
 /* ===== เริ่มต้น ===== */
 /* ตัวเลขทุกตัวที่โชว์บนหน้าจอคิดจากจำนวนคำถามจริง
-   เพิ่มหรือลดคำถามแล้วหน้าเว็บปรับตามเอง ไม่ต้องไล่แก้ทีละจุด */
+   เพิ่มหรือลดคำถามใน Google Sheets แล้วหน้าเว็บปรับตามเองทันที */
+function updateQuestionStats() {
+  TOTAL = QUESTIONS.length;
+  el("intro-lead").textContent = INTRO.lead.replace("{n}", TOTAL);
+  el("fact-total").textContent = String(TOTAL);
+  el("fact-mins").textContent = String(Math.max(1, Math.round(TOTAL * 11 / 60)));
+  el("bars-title").textContent = "คะแนนทั้ง 4 ด้าน จาก " + TOTAL + " ข้อ";
+  el("counter").textContent = "ข้อ 1 จาก " + TOTAL;
+}
+
+function loadLiveQuestions() {
+  var btn = el("btn-start");
+  btn.disabled = true;
+  btn.textContent = "กำลังโหลดชุดคำถามล่าสุด…";
+  var sep = ENDPOINT.indexOf("?") === -1 ? "?" : "&";
+  fetch(ENDPOINT + sep + "action=questions")
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (data && data.ok && Array.isArray(data.questions) && data.questions.length) {
+        QUESTIONS = data.questions;
+        QUESTION_KEY_ID = data.keyId || "";
+        updateQuestionStats();
+        buildDeck();
+      }
+    })
+    .catch(function () {
+      /* ถ้าเชื่อมต่อไม่ได้ ให้ใช้ชุดคำถามสำรองในหน้าเว็บต่อได้ตามปกติ */
+    })
+    .finally(function () {
+      btn.disabled = false;
+      btn.textContent = "เริ่มทำแบบประเมิน";
+    });
+}
+
 el("intro-eyebrow").textContent = INTRO.eyebrow;
 el("intro-title").textContent = INTRO.title;
-el("intro-lead").textContent = INTRO.lead.replace("{n}", TOTAL);
-el("fact-total").textContent = String(TOTAL);
-el("fact-mins").textContent = String(Math.max(1, Math.round(TOTAL * 11 / 60)));
-el("bars-title").textContent = "คะแนนทั้ง 4 ด้าน จาก " + TOTAL + " ข้อ";
-el("counter").textContent = "ข้อ 1 จาก " + TOTAL;
+updateQuestionStats();
 el("consent-text").textContent = CONSENT_TEXT;
 renderForm();
 buildDeck();
+if (SAVE_ENABLED) loadLiveQuestions();
 
 if (IS_APPLICANT) {
   /* ไม่โชว์คำอธิบาย 4 สไตล์ให้ผู้สมัครเห็นก่อนทำ ไม่งั้นจะรู้ว่าต้องตอบทางไหน */

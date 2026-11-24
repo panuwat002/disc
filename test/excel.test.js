@@ -181,6 +181,23 @@ function createAppsScriptSandbox() {
       autoResizeColumns: function () {},
       clear: function () { grid.length = 0; },
       appendRow: function (row) { grid.push(row.slice()); },
+      copyTo: function () {
+        var copyName = name + '_copy_' + Date.now();
+        var copied = makeSheet(copyName);
+        grid.forEach(function (r) { copied._grid.push(r.slice()); });
+        copied.setName = function (newName) {
+          delete sheetsMap[copyName];
+          copyName = newName;
+          sheetsMap[newName] = copied;
+        };
+        return copied;
+      },
+      setName: function (newName) {
+        delete sheetsMap[name];
+        name = newName;
+        sheetsMap[newName] = sheetObj;
+      },
+      setColumnWidth: function () {},
       getRange: function (row, col, numRows, numCols) {
         numRows = numRows || 1;
         numCols = numCols || 1;
@@ -238,6 +255,7 @@ function createAppsScriptSandbox() {
 
   var uiMenuBuilder = {
     addItem: function (label, fn) { menuCalls.push({ label: label, fn: fn }); return this; },
+    addSubMenu: function (sub) { menuCalls.push({ sub: true }); return this; },
     addSeparator: function () { menuCalls.push({ sep: true }); return this; },
     addToUi: function () { return this; }
   };
@@ -315,18 +333,17 @@ function createAppsScriptSandbox() {
 
 var gs = createAppsScriptSandbox();
 
-test('9. Code.gs โหลดได้ไม่มี syntax error และ onOpen() สร้างเมนูครบทั้ง 4 รายการ', function () {
+test('9. Code.gs โหลดได้ไม่มี syntax error และ onOpen() สร้างเมนูครบทั้ง 2 หมวด', function () {
   gs.onOpen();
-  var items = gs._menuCalls.filter(function (x) { return !x.sep; });
-  assert.strictEqual(items.length, 4);
-  assert.strictEqual(items[0].fn, 'openExcelImportDialog');
-  assert.strictEqual(items[1].fn, 'openExcelExportDialog');
-  assert.strictEqual(items[2].fn, 'openExcelTemplateDialog');
-  assert.strictEqual(items[3].fn, 'createSummarySheet');
+  var items = gs._menuCalls.filter(function (x) { return !x.sep && !x.sub; });
+  assert.strictEqual(items.length, 8);
+  assert.strictEqual(items[0].fn, 'openQuestionImportDialog');
+  assert.strictEqual(items[4].fn, 'openExcelImportDialog');
+  assert.strictEqual(items[7].fn, 'createSummarySheet');
 });
 
-test('10. HTML Dialog ของทั้ง 3 แท็บมี JavaScript ที่ syntax ถูกต้องสมบูรณ์', function () {
-  ['import', 'export', 'template'].forEach(function (tab) {
+test('10. HTML Dialog ของทั้ง 4 แท็บ และสคริปต์ใน index.html มี JavaScript ที่ syntax ถูกต้องสมบูรณ์', function () {
+  ['questions', 'import', 'export', 'template'].forEach(function (tab) {
     var html = gs.buildExcelDialogHtml_(tab);
     assert.ok(html.indexOf('XLSX.write') !== -1);
     assert.ok(html.indexOf('biff8') !== -1);
@@ -334,9 +351,13 @@ test('10. HTML Dialog ของทั้ง 3 แท็บมี JavaScript ท�
     assert.ok(scripts && scripts.length >= 2);
     scripts.forEach(function (block) {
       var body = block.replace(/^<script>/, '').replace(/<\/script>$/, '');
-      new Function(body); // จะ throw ถ้ามี syntax error
+      new Function(body);
     });
   });
+  var indexHtml = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  var idxScript = indexHtml.match(/<script>([\s\S]*?)<\/script>/);
+  assert.ok(idxScript && idxScript[1]);
+  new Function(idxScript[1]);
 });
 
 test('11. normalizeDateString_ แปลงวันที่ได้ทั้ง ISO, dd/MM/yyyy, พ.ศ. และ Excel serial', function () {
@@ -450,7 +471,91 @@ test('15. รัน node build.js แล้วยังทำงานปกต�
   assert.ok(out.indexOf('สร้างไฟล์เรียบร้อย') !== -1);
   var gsAfter = fs.readFileSync(path.join(ROOT, 'apps-script', 'Code.gs'), 'utf8');
   assert.ok(gsAfter.indexOf('function importExcelRows(') !== -1);
-  assert.ok(gsAfter.indexOf('function getExportData(') !== -1);
+  assert.ok(gsAfter.indexOf('function importQuestionRows(') !== -1);
+  assert.ok(gsAfter.indexOf('var DEFAULT_QUESTIONS = [') !== -1);
+});
+
+test('16. สร้างชีต "ชุดคำถาม" 37 ข้อ และ doGet(?action=questions) ส่งเฉพาะคำถามที่สลับแล้วไม่มีเฉลย', function () {
+  gs.initDefaultQuestionSheet();
+  assert.ok(gs._sheetsMap['ชุดคำถาม']);
+  assert.strictEqual(gs._sheetsMap['ชุดคำถาม']._grid.length, 38); // 1 header + 37 rows
+
+  var resText = gs.doGet({ parameter: { action: 'questions' } })._text;
+  var payload = JSON.parse(resText);
+  assert.strictEqual(payload.ok, true);
+  assert.strictEqual(payload.source, 'sheet');
+  assert.strictEqual(payload.count, 37);
+  assert.strictEqual(payload.questions.length, 37);
+  assert.strictEqual(payload.questions[0].D, undefined);
+  assert.strictEqual(payload.questions[0].tag, undefined);
+  assert.strictEqual(payload.questions[0].o.length, 4);
+});
+
+test('17. นำเข้าชุดคำถามใหม่ลดเหลือ 5 ข้อ (แทนที่ + สำรองชุดเก่า) แล้ว doGet/doPost อัปเดตทันที', function () {
+  var oldKeyId = JSON.parse(gs.doGet({ parameter: { action: 'questions' } })._text).keyId;
+  var newRows = [
+    { 'คำถาม': 'ข้อใหม่ 1', 'D (กระทิง)': 'ลุย1', 'I (นกอินทรี)': 'คุย1', 'S (หนู)': 'นิ่ง1', 'C (หมี)': 'เป๊ะ1', 'กลุ่มความสอดคล้อง (tag)': 'คู่ทดสอบ' },
+    { 'คำถาม': 'ข้อใหม่ 2', 'D (กระทิง)': 'ลุย2', 'I (นกอินทรี)': 'คุย2', 'S (หนู)': 'นิ่ง2', 'C (หมี)': 'เป๊ะ2' },
+    { 'คำถาม': 'ข้อใหม่ 3', 'D (กระทิง)': 'ลุย3', 'I (นกอินทรี)': 'คุย3', 'S (หนู)': 'นิ่ง3', 'C (หมี)': 'เป๊ะ3' },
+    { 'คำถาม': 'ข้อใหม่ 4', 'D (กระทิง)': 'ลุย4', 'I (นกอินทรี)': 'คุย4', 'S (หนู)': 'นิ่ง4', 'C (หมี)': 'เป๊ะ4' },
+    { 'คำถาม': 'ข้อใหม่ 5', 'D (กระทิง)': 'ลุย5', 'I (นกอินทรี)': 'คุย5', 'S (หนู)': 'นิ่ง5', 'C (หมี)': 'เป๊ะ5', 'กลุ่มความสอดคล้อง (tag)': 'คู่ทดสอบ' }
+  ];
+
+  var imp = gs.importQuestionRows({ rows: newRows, mode: 'replace', backupOld: true });
+  assert.strictEqual(imp.ok, true);
+  assert.strictEqual(imp.count, 5);
+  assert.strictEqual(imp.pairs, 1);
+  assert.ok(imp.backupSheetName && imp.backupSheetName.indexOf('ชุดคำถาม_เก่า_') === 0);
+  assert.ok(gs._sheetsMap[imp.backupSheetName]);
+
+  // doGet(?action=questions) ต้องได้ 5 ข้อทันที
+  var live = JSON.parse(gs.doGet({ parameter: { action: 'questions' } })._text);
+  assert.strictEqual(live.count, 5);
+  assert.strictEqual(live.keyId, imp.keyId);
+  assert.notStrictEqual(live.keyId, oldKeyId);
+
+  // doPost ด้วย keyId เก่า ต้องถูกปฏิเสธป้องกันคะแนนเพี้ยน
+  var stalePost = JSON.parse(gs.doPost({
+    postData: { contents: JSON.stringify({ mode: 'employee', name: 'คนเก่า', department: 'IT', picks: '00000', keyId: oldKeyId }) }
+  })._text);
+  assert.strictEqual(stalePost.ok, false);
+
+  // doPost ด้วย keyId ใหม่ 5 ข้อ ต้องคิดคะแนนครบ 5 ข้อ
+  var freshPost = JSON.parse(gs.doPost({
+    postData: { contents: JSON.stringify({ mode: 'employee', name: 'คนใหม่', department: 'IT', picks: '01230', keyId: live.keyId }) }
+  })._text);
+  assert.strictEqual(freshPost.ok, true);
+  var sum = freshPost.result.counts.D + freshPost.result.counts.I + freshPost.result.counts.S + freshPost.result.counts.C;
+  assert.strictEqual(sum, 5);
+});
+
+test('18. นำเข้าชุดคำถามโหมดเพิ่มต่อท้าย (append) และปฏิเสธข้อที่ข้อมูลไม่ครบโดยไม่ทำลายของเดิม', function () {
+  var addRes = gs.importQuestionRows({
+    rows: [
+      { 'คำถาม': 'ข้อเพิ่ม 6', 'D': 'ลุย6', 'I': 'คุย6', 'S': 'นิ่ง6', 'C': 'เป๊ะ6' },
+      { 'คำถาม': 'ข้อเพิ่ม 7', 'D': 'ลุย7', 'I': 'คุย7', 'S': 'นิ่ง7', 'C': 'เป๊ะ7' }
+    ],
+    mode: 'append'
+  });
+  assert.strictEqual(addRes.ok, true);
+  assert.strictEqual(addRes.count, 7);
+
+  var badRes = gs.importQuestionRows({
+    rows: [
+      { 'คำถาม': 'ข้อเสีย', 'D': 'ซ้ำ', 'I': 'ซ้ำ', 'S': '', 'C': 'เป๊ะ' }
+    ],
+    mode: 'replace'
+  });
+  assert.strictEqual(badRes.ok, false);
+  assert.ok(badRes.validationErrors && badRes.validationErrors.length >= 2);
+  // ของเดิม 7 ข้อต้องยังอยู่ครบ
+  var stillSeven = JSON.parse(gs.doGet({ parameter: { action: 'questions' } })._text);
+  assert.strictEqual(stillSeven.count, 7);
+
+  // ส่งออกชุดคำถามปัจจุบันเป็น .xls จริงได้ครบ 7 ข้อ
+  var expQ = gs.getQuestionsExportData();
+  assert.strictEqual(expQ.ok, true);
+  assert.strictEqual(expQ.count, 7);
 });
 
 cleanup();

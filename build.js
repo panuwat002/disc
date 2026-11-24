@@ -160,7 +160,7 @@ var htmlBody = 'var QUESTIONS = [\n' + questions.map(function (q) {
   return '  { t: ' + esc(q.t) + ',\n    o: [' + q.o.map(esc).join(',\n        ') + '] }';
 }).join(',\n') + '\n];\n';
 
-/* Code.gs — เฉลยและคู่ความสอดคล้อง */
+/* Code.gs — เฉลย คู่ความสอดคล้อง และชุดคำถามเริ่มต้นสำหรับสร้างชีต "ชุดคำถาม" */
 var gsBody = ''
   + 'var ANSWER_KEY = [\n'
   + answerKey.map(function (k, i) {
@@ -175,6 +175,19 @@ var gsBody = ''
             + ' (ข้อ ' + (p.idx[0] + 1) + ' กับ ข้อ ' + (p.idx[1] + 1) + ')';
         }).join('\n')
       : '  // ยังไม่ได้ใส่ tag ให้ข้อไหนเลย')
+  + '\n];\n\n'
+  + 'var DEFAULT_QUESTIONS = [\n'
+  + SOURCE.map(function (e) {
+      var o = {
+        q: String(e.q).trim(),
+        D: String(e.D).trim(),
+        I: String(e.I).trim(),
+        S: String(e.S).trim(),
+        C: String(e.C).trim()
+      };
+      if (e.tag && String(e.tag).trim()) o.tag = String(e.tag).trim();
+      return '  ' + esc(o);
+    }).join(',\n')
   + '\n];\n';
 
 replaceBlock(HTML, htmlBody, 'index.html');
